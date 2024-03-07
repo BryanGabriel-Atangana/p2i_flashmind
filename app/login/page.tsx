@@ -3,6 +3,21 @@ import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { SubmitButton } from "./submit-button";
+import bcrypt from "bcrypt";
+import { v4 as uuidv4 } from "uuid";
+
+async function verifyPassword(
+  password: string,
+  hashedPassword: string
+): Promise<boolean> {
+  try {
+    // Use bcrypt to compare the provided password with the hashed password
+    return await bcrypt.compare(password, hashedPassword);
+  } catch (error) {
+    console.error("Error verifying password:", error);
+    return false; // Return false in case of error
+  }
+}
 
 export default function Login({
   searchParams,
@@ -16,13 +31,20 @@ export default function Login({
     const password = formData.get("password") as string;
     const supabase = createClient();
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { data: userData, error: userError } =
+      await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (error) {
+    if (userError) {
+      console.error("Error querying user:", userError.message);
       return redirect("/login?message=Could not authenticate user");
+    }
+
+    if (!userData) {
+      // User not found
+      return redirect("/login?message=Invalid email or username");
     }
 
     return redirect("/protected");
@@ -34,9 +56,10 @@ export default function Login({
     const origin = headers().get("origin");
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
+    const userId = uuidv4();
     const supabase = createClient();
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -48,7 +71,16 @@ export default function Login({
       return redirect("/login?message=Could not authenticate user");
     }
 
-    return redirect("/login?message=Check email to continue sign in process");
+    const { error: insertError } = await supabase
+      .from("users")
+      .insert({
+        user_id: data?.user?.id,
+        email,
+        password,
+        last_login: data?.user?.last_sign_in_at,
+      });
+
+    return redirect("/protected");
   };
 
   return (
