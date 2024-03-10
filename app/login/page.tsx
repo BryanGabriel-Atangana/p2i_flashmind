@@ -2,10 +2,9 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { SubmitButton } from "./submit-button";
 import bcrypt from "bcrypt";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { SubmitButton } from "./submit-button";
 
 async function hashPassword(pass: string) {
   const saltRounds = 10;
@@ -21,7 +20,6 @@ export default function Login({
 }) {
   const signIn = async (formData: FormData) => {
     "use server";
-
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     const supabase = createClient();
@@ -47,7 +45,6 @@ export default function Login({
 
   const signUp = async (formData: FormData) => {
     "use server";
-
     const origin = headers().get("origin");
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
@@ -117,6 +114,7 @@ export default function Login({
           <input
             className="rounded-md px-4 py-2 bg-inherit border "
             name="email"
+            id="email"
             placeholder="flash@mind.com"
             required
           />
@@ -125,11 +123,11 @@ export default function Login({
           <label className="text-sm text-[#181818]" htmlFor="password">
             Mot de passe
           </label>
-
           <input
             className="rounded-md px-4 py-2 bg-inherit border mb-4"
             type="password"
             name="password"
+            id="password"
             placeholder="••••••••"
             required
           />

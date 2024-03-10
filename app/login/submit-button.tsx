@@ -14,10 +14,10 @@ export function SubmitButton({ children, pendingText, ...props }: Props) {
   const isPending = pending && action === props.formAction;
 
   return (
-    <motion.button whileHover={{ scale: 1.04 }}>
+    <motion.div whileHover={{ scale: 1.04 }}>
       <button {...props} type="submit" aria-disabled={pending}>
         {isPending ? pendingText : children}
       </button>
-    </motion.button>
+    </motion.div>
   );
 }
