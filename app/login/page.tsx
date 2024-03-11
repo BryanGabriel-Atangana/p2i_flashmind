@@ -136,7 +136,7 @@ export default function Login({
         <SubmitButton
           formAction={signIn}
           className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500  text-white rounded-md px-4 py-2 text-foreground mb-2 w-full"
-          pendingText="Signing In..."
+          pendingText="Connexion..."
         >
           Se Connecter
         </SubmitButton>
@@ -144,7 +144,7 @@ export default function Login({
         <SubmitButton
           formAction={signUp}
           className="border border-foreground/20 rounded-md px-4 py-2 text-foreground mb-2 w-full"
-          pendingText="Signing Up..."
+          pendingText="En cours..."
         >
           S'inscrire
         </SubmitButton>

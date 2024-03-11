@@ -14,10 +14,16 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import ColorGrid from "./ColorGrid";
-
-const colors = [];
+import useDocumentStore from "@/store/useDocument";
 
 export function DrawerDemo() {
+  const { docTitle, setDocTitle, createDocument } = useDocumentStore();
+  const [selectedColor, setSelectedColor] = React.useState("#FF5733");
+
+  const handleCreateDoc = async () => {
+    await createDocument(selectedColor);
+  };
+
   return (
     <Drawer>
       <DrawerTrigger asChild>
@@ -39,7 +45,7 @@ export function DrawerDemo() {
         </Button>
       </DrawerTrigger>
       <DrawerContent>
-        <div className="mx-auto w-full max-w-sm">
+        <div className="mx-auto w-full max-w-sm py-4">
           <DrawerHeader>
             <DrawerTitle>Ajouter un document</DrawerTitle>
             <DrawerDescription>
@@ -54,17 +60,22 @@ export function DrawerDemo() {
               type="text"
               placeholder="Nom du document"
               className="w-full"
+              value={docTitle}
+              onChange={(e) => setDocTitle(e.target.value)}
+              // formAction={}
             />
           </div>
           <div>
-            {/* Colors */}
-            <ColorGrid />
+            <ColorGrid
+              selectedColor={selectedColor}
+              setSelectedColor={setSelectedColor}
+            />
           </div>
 
           <DrawerFooter>
-            <Button>Ajouter</Button>
+            <Button onClick={handleCreateDoc}>Ajouter</Button>
             <DrawerClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline">Annuler</Button>
             </DrawerClose>
           </DrawerFooter>
         </div>

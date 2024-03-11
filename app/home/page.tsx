@@ -1,10 +1,20 @@
 import AddCardDefault from "@/components/AddCardDefault";
 import ProfileMenu from "@/components/ProfileMenu";
 import React from "react";
+import { redirect } from "next/navigation";
 
 import { DrawerDemo } from "@/components/CreateDocDrawer";
+import { createClient } from "@/utils/supabase/server";
 
-const page = () => {
+const page = async () => {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return redirect("/login");
+  }
+
   return (
     <div className="w-[100vw] h-[100vh] bg-[#FCFCFC]">
       <main className="grid grid-cols-8 w-[100%] h-[100%]">

@@ -1,5 +1,10 @@
 import React, { useState } from "react";
 
+interface ColorGridProps {
+  selectedColor: string;
+  setSelectedColor: (color: string) => void;
+}
+
 const colorGrid: string[] = [
   "#FF5733", // Coral
   "#FFBD33", // Selective Yellow
@@ -17,9 +22,10 @@ const colorGrid: string[] = [
   "#74991C", // Darker Inchworm
 ];
 
-const ColorGrid: React.FC = () => {
-  const [selectedColor, setSelectedColor] = useState<string>(colorGrid[0]);
-
+const ColorGrid: React.FC<ColorGridProps> = ({
+  selectedColor,
+  setSelectedColor,
+}) => {
   const handleColorClick = (color: string): void => {
     setSelectedColor(color);
   };
